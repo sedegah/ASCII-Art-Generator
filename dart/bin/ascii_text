@@ -1,0 +1,13 @@
+import 'package:dart_figlet/dart_figlet.dart';
+
+void main(List<String> args) {
+  if (args.isEmpty) {
+    print('Usage: dart run bin/ascii_text.dart "Your Text Here"');
+    return;
+  }
+
+  final input = args.join(' ');
+  final figlet = Figlet();
+
+  print(figlet.renderText(input));
+}
