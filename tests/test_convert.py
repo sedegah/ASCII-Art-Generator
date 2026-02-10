@@ -49,3 +49,42 @@ def test_image_to_ascii_rejects_non_positive_width(tmp_path: Path):
 
     with pytest.raises(ValueError, match="Width"):
         image_to_ascii(image_path, width=0)
+
+
+def test_image_to_ascii_rejects_unknown_charset(tmp_path: Path):
+    image_path = tmp_path / "tiny.png"
+    Image.new("L", (2, 2), color=120).save(image_path)
+
+    with pytest.raises(ValueError, match="Unknown charset"):
+        image_to_ascii(image_path, width=10, charset_name="unknown")
+
+
+def test_image_to_ascii_accepts_custom_charset(tmp_path: Path):
+    image_path = tmp_path / "tiny.png"
+    Image.new("L", (3, 3), color=255).save(image_path)
+
+    output = image_to_ascii(image_path, width=3, charset=".X")
+    assert set(output.replace("\n", "")) == {"X"}
+
+
+def test_image_to_ascii_rejects_missing_image(tmp_path: Path):
+    missing_path = tmp_path / "missing.png"
+
+    with pytest.raises(ValueError, match="does not exist"):
+        image_to_ascii(missing_path)
+
+
+def test_image_to_ascii_rejects_empty_custom_charset(tmp_path: Path):
+    image_path = tmp_path / "tiny.png"
+    Image.new("L", (2, 2), color=120).save(image_path)
+
+    with pytest.raises(ValueError, match="Charset"):
+        image_to_ascii(image_path, charset="")
+
+
+def test_image_to_ascii_rejects_non_image_file(tmp_path: Path):
+    not_image = tmp_path / "not-image.txt"
+    not_image.write_text("hello")
+
+    with pytest.raises(ValueError, match="Failed to read image"):
+        image_to_ascii(not_image)
