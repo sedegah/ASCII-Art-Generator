@@ -7,6 +7,7 @@ Convert images to ASCII art in the terminal using different character sets.
   - Dense: `@%#*+=-:. `
   - Sparse: `#O+=- `
   - Binary: `10`
+- Optional custom charset via `--chars`
 - Optional color output using `termcolor`
 - Width and charset CLI options
 - Pytest unit tests
