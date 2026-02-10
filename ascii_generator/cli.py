@@ -12,18 +12,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Convert image to ASCII art.")
     parser.add_argument("image", help="Path to input image")
     parser.add_argument("--width", type=int, default=100, help="Output ASCII width")
-
-    charset_group = parser.add_mutually_exclusive_group()
-    charset_group.add_argument(
+    parser.add_argument(
         "--charset",
+        default="dense",
         choices=sorted(CHARSETS.keys()),
-        help="Named charset type (default: dense)",
+        help="Charset type",
     )
-    charset_group.add_argument(
-        "--chars",
-        help="Custom charset string (overrides --charset)",
-    )
-
     parser.add_argument("--color", action="store_true", help="Enable colored ASCII output")
 
     args = parser.parse_args()
@@ -34,15 +28,7 @@ def main() -> None:
     if args.width <= 0:
         parser.error("--width must be a positive integer")
 
-    try:
-        ascii_art = image_to_ascii(
-            image_path,
-            width=args.width,
-            charset_name=args.charset or "dense",
-            charset=args.chars,
-        )
-    except ValueError as exc:
-        parser.error(str(exc))
+    ascii_art = image_to_ascii(image_path, width=args.width, charset_name=args.charset)
 
     if args.color:
         for line in ascii_art.splitlines():
