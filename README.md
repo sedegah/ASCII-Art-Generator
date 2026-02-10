@@ -7,12 +7,41 @@ Convert images to ASCII art in the terminal using different character sets.
   - Dense: `@%#*+=-:. `
   - Sparse: `#O+=- `
   - Binary: `10`
+- Optional custom charset via `--chars`
 - Optional color output using `termcolor`
-- CLI with flexible options
+- Width and charset CLI options
+- Quick charset discovery via `--list-charsets`
+- Friendly validation errors for missing images and invalid options
 - Pytest unit tests
-- GitHub Actions CI
+
+## Install
+
+```bash
+pip install -r requirements.txt
+```
 
 ## CLI Usage
 
 ```bash
 python -m ascii_generator.cli image.jpg --width 120 --charset dense --color
+```
+
+Use a custom charset string:
+
+```bash
+python -m ascii_generator.cli image.jpg --width 120 --chars "@#:. "
+```
+
+If `--charset` is omitted, the default named set is `dense`.
+
+List built-in charsets:
+
+```bash
+python -m ascii_generator.cli --list-charsets
+```
+
+## Run tests
+
+```bash
+PYTHONPATH=. pytest -q
+```
