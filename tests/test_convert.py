@@ -65,3 +65,18 @@ def test_image_to_ascii_accepts_custom_charset(tmp_path: Path):
 
     output = image_to_ascii(image_path, width=3, charset=".X")
     assert set(output.replace("\n", "")) == {"X"}
+
+
+def test_image_to_ascii_rejects_missing_image(tmp_path: Path):
+    missing_path = tmp_path / "missing.png"
+
+    with pytest.raises(ValueError, match="does not exist"):
+        image_to_ascii(missing_path)
+
+
+def test_image_to_ascii_rejects_empty_custom_charset(tmp_path: Path):
+    image_path = tmp_path / "tiny.png"
+    Image.new("L", (2, 2), color=120).save(image_path)
+
+    with pytest.raises(ValueError, match="Charset"):
+        image_to_ascii(image_path, charset="")

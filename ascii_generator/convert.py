@@ -46,10 +46,14 @@ def image_to_ascii(
     if width <= 0:
         raise ValueError("Width must be a positive integer.")
 
+    image_path = Path(path)
+    if not image_path.exists() or not image_path.is_file():
+        raise ValueError(f"Input image does not exist: {path}")
+
     resolved_charset = _resolve_charset(charset_name, charset)
 
     try:
-        with Image.open(path) as source:
+        with Image.open(image_path) as source:
             img = source.convert("L")
     except OSError as exc:
         raise ValueError(f"Failed to read image '{path}': {exc}") from exc
@@ -57,7 +61,7 @@ def image_to_ascii(
     w, h = img.size
     aspect_ratio = h / w
     height = max(1, int(aspect_ratio * width * 0.55))
-    img = img.resize((width, height))
+    img = img.resize((width, height), resample=Image.Resampling.BICUBIC)
 
     pixels = np.array(img, dtype=np.uint8)
     indices = (pixels.astype(np.float32) / 255 * (len(resolved_charset) - 1)).astype(np.int32)

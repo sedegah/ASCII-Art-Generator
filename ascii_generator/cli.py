@@ -16,9 +16,8 @@ def main() -> None:
     charset_group = parser.add_mutually_exclusive_group()
     charset_group.add_argument(
         "--charset",
-        default="dense",
         choices=sorted(CHARSETS.keys()),
-        help="Named charset type",
+        help="Named charset type (default: dense)",
     )
     charset_group.add_argument(
         "--chars",
@@ -39,7 +38,7 @@ def main() -> None:
         ascii_art = image_to_ascii(
             image_path,
             width=args.width,
-            charset_name=args.charset,
+            charset_name=args.charset or "dense",
             charset=args.chars,
         )
     except ValueError as exc:
